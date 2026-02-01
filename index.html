@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ro" data-theme="neutral">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Moara cu Noroc - Destinul Tragicului</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* --- Variabile de Temă (Palete de culori dinamice) --- */
+        :root[data-theme="neutral"] {
+            --bg-body: #2b2b2b;
+            --bg-paper: #e6dfd3; /* Culoare de pergament vechi */
+            --text-main: #333333;
+            --accent-color: #5c4b3a;
+            --highlight: #8a7561;
+            --shadow-intensity: 0.3;
+        }
+
+        :root[data-theme="gold"] {
+            --bg-body: #1a1500;
+            --bg-paper: #fff4c2; /* Lumină aurie */
+            --text-main: #4a3b00;
+            --accent-color: #b8860b; /* Dark Goldenrod */
+            --highlight: #ffd700;
+            --shadow-intensity: 0.5;
+        }
+
+        :root[data-theme="dark"] {
+            --bg-body: #0a0a0a;
+            --bg-paper: #2c2c2c; /* Atmosferă apăsătoare */
+            --text-main: #c7c7c7;
+            --accent-color: #4a4a4a;
+            --highlight: #6e6e6e;
+            --shadow-intensity: 0.7;
+        }
+
+        :root[data-theme="blood"] {
+            --bg-body: #110000;
+            --bg-paper: #380000; /* Roșu închis, violent */
+            --text-main: #ffcccc;
+            --accent-color: #ff0000;
+            --highlight: #ff3333;
+            --shadow-intensity: 0.8;
+        }
+
+        :root[data-theme="fire"] {
+            --bg-body: #220f00;
+            --bg-paper: #4a2311; /* Portocaliu de jar */
+            --text-main: #ffcc99;
+            --accent-color: #ff4500; /* Orange Red */
+            --highlight: #ff8c00;
+            --shadow-intensity: 0.6;
+        }
+
+        /* --- Stiluri Generale --- */
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Lora', serif; /* Font pentru textul narativ */
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            line-height: 1.7;
+            transition: background-color 1.5s ease, color 1.5s ease;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #game-container {
+            background-color: var(--bg-paper);
+            width: 100%;
+            max-width: 850px;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0,0,0, var(--shadow-intensity));
+            border: 1px solid var(--accent-color);
+            transition: all 1.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Element decorativ subtil */
+        #game-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif; /* Font pentru titluri */
+            color: var(--accent-color);
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: color 1.5s ease;
+        }
+
+        .meta-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 15px;
+            font-family: 'Cinzel', serif;
+            opacity: 0.8;
+        }
+
+        .story-text {
+            font-size: 1.15rem;
+            margin-bottom: 40px;
+            white-space: pre-wrap;
+        }
+
+        /* --- Stiluri Butoane --- */
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        button {
+            background-color: transparent;
+            border: 2px solid var(--accent-color);
+            color: var(--text-main);
+            padding: 18px 25px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 0%; height: 100%;
+            background-color: var(--accent-color);
+            transition: width 0.4s ease;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        button:hover {
+            border-color: var(--highlight);
+            color: var(--highlight);
+            transform: translateX(5px);
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+        }
+         button:hover::before {
+            width: 100%;
+         }
+
+
+        /* --- Animatii --- */
+        .fade-in-text {
+            animation: textFadeIn 1.2s ease-out;
+        }
+
+        @keyframes textFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            #game-container {
+                padding: 25px;
+            }
+            h1 { font-size: 1.8rem; }
+            button { padding: 15px 20px; font-size: 1rem; }
+            .meta-info { flex-direction: column; gap: 10px; text-align: center;}
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <h1>Moara cu Noroc</h1>
+    
+    <div class="meta-info">
+        <span id="chapter">Prolog</span>
+        <span id="status-ghita">Stare: Cizmar cinstit</span>
+    </div>
+
+    <div id="story" class="story-text">
+        </div>
+
+    <div id="choices" class="choices">
+        </div>
+</div>
+
+<script>
+    // Elementele din DOM
+    const storyElement = document.getElementById('story');
+    const choicesElement = document.getElementById('choices');
+    const statusElement = document.getElementById('status-ghita');
+    const chapterElement = document.getElementById('chapter');
+    const htmlElement = document.documentElement; // Pentru schimbarea temei
+
+    // --- Baza de Date Narrativă ---
+    // Fiecare scenă are acum o proprietate "theme" care dictează atmosfera
+    const scenes = {
+        start: {
+            text: "„Omul să fie mulțumit cu sărăcia sa, căci, dacă e vorba, nu bogăția, ci liniștea colibei tale te face fericit.”\n\nCuvintele bătrânei răsună în mica ta cizmărie. Ești sărac, Ghiță, dar cinstit. Totuși, ocazia de a lua în arendă cârciuma de la Moara cu Noroc a apărut. E o răscruce de drumuri, izolată, dar unde banii curg repede. Simți chemarea unui destin mai mare.",
+            chapter: "I. Ispita",
+            status: "Cizmar Sărac",
+            theme: "neutral",
+            choices: [
+                { text: "Rămân la liniștea colibei mele. (Refuză)", target: "refuz" },
+                { text: "Vreau să scap de sărăcie. Iau Moara! (Acceptă)", target: "sosire_moara" }
+            ]
+        },
+        refuz: {
+            text: "Ai ales liniștea. Ai rămas cizmar, cârpind cizmele altora până la adânci bătrâneți. Nu ai cunoscut niciodată bogăția, dar nici disperarea care pândea la răscruce de vânturi.\n\nEste un sfârșit... dar oare este cel pe care ți l-ai dorit?",
+            chapter: "Final Alternativ",
+            status: "Om liniștit",
+            theme: "neutral",
+            choices: [
+                { text: "Reîncepe povestea", target: "start" }
+            ]
+        },
+        sosire_moara: {
+            text: "Te-ai mutat la Moară. Începutul este promițător. Muncești din greu alături de Ana. Banii se strâng în ladă, iar viitorul pare strălucitor ca aurul. \n\nDar locul e pustiu, iar vântul aduce zvonuri despre stăpânul real al drumurilor: Lică Sămădăul. Simți o umbră crescând peste fericirea voastră.",
+            chapter: "II. Prosperitatea Iluzorie",
+            status: "Cârciumar Prosper",
+            theme: "gold",
+            choices: [
+                { text: "Voi munci cinstit și voi ignora zvonurile.", target: "aparitie_lica" },
+                { text: "Mă înarmez. Trebuie să îmi apăr aurul.", target: "aparitie_lica_pregatit" }
+            ]
+        },
+        aparitie_lica: {
+            text: "Într-o zi, umbra devine realitate. Lică Sămădăul oprește la han. E stăpânitor, cu o privire rece care te cântărește și te găsește ușor. \n\nÎți spune direct: trebuie să colaborezi. Să-i tăinuiești pe cei ce trec, să-i ții banii. „Tu aici nu poți sta fără voia mea, Ghiță.”",
+            chapter: "III. Întâlnirea cu Răul",
+            status: "Înfricoșat",
+            theme: "dark",
+            choices: [
+                { text: "Îl înfrunt! Nu voi fi sluga nimănui.", target: "conflict_direct" },
+                { text: "Accept tacit. Trebuie să câștig timp.", target: "compromis" }
+            ]
+        },
+        aparitie_lica_pregatit: {
+            text: "Lică sosește. Vede pistoalele tale și câinii mari. Râde. Un râs sec, disprețuitor. \n\n„Crezi că fiarele astea te apără de mine? Eu sunt legea aici.” Îți dai seama că forța brută nu te ajută împotriva influenței lui malefice.",
+            chapter: "III. Întâlnirea cu Răul",
+            status: "În defensivă",
+            theme: "dark",
+            choices: [
+                { text: "Nu am de ales. Trebuie să fac un compromis.", target: "compromis" }
+            ]
+        },
+        conflict_direct: {
+            text: "Încerci să fii demn, dar Lică nu cunoaște refuzul. Îți fură caii, îți sabotează afacerea. Te strânge cu ușa până când orgoliul tău cedează în fața necesității.",
+            chapter: "IV. Strânsoarea",
+            status: "Presat",
+            theme: "dark",
+            choices: [
+                { text: "Trebuie să fac pactul cu diavolul pentru a supraviețui.", target: "compromis" }
+            ]
+        },
+        compromis: {
+            text: "Ai intrat în joc. Banii se înmulțesc, dar sufletul ți se usucă. Devii tăinuitor de hoți. Ana te privește cu teamă; ai devenit posomorât, violent. Ești bogat, dar ești sclavul lui Lică. Conștiința te macină în fiecare noapte.",
+            chapter: "V. Dezumanizarea",
+            status: "Complice",
+            theme: "dark",
+            choices: [
+                { text: "Mă afund în lăcomie. Îi jur credință lui Lică.", target: "crimele" },
+                { text: "Încerc o cale de ieșire. Merg la jandarmul Pintea.", target: "jandarmul" }
+            ]
+        },
+        jandarmul: {
+            text: "Pintea, fost hoț devenit jandarm, vrea capul lui Lică. Îți cere dovezi. Ești prins între ciocan și nicovală. Dacă Lică află, te ucide. Dacă nu-l ajuți pe Pintea, vei înfunda pușcăria alături de Sămădău.",
+            chapter: "VI. Joc Dublu",
+            status: "Spion",
+            theme: "dark",
+            choices: [
+                { text: "Trebuie să-i întind o capcană lui Lică.", target: "capcana_decizie" }
+            ]
+        },
+        crimele: {
+            text: "Se comite o crimă oribilă asupra arendașului. Ești târât la judecată. Juri strâmb pe cruce pentru a-l scăpa pe Lică, deși știi că e vinovat. Ai scăpat de legea oamenilor, dar ai pierdut-o pe Ana, care te disprețuiește profund.",
+            chapter: "VII. Judecata Strâmbă",
+            status: "Suflet Pierdut",
+            theme: "blood",
+            choices: [
+                { text: "Nu mai suport! Trebuie să mă răzbun pe Lică.", target: "capcana_decizie" }
+            ]
+        },
+        capcana_decizie: {
+            text: "Este Paștele. Atmosfera e irespirabilă. Decizi să joci ultima carte: îl vei da pe Lică pe mâna lui Pintea. Dar pentru a-l ține pe Lică la Moară, faci gestul suprem de lașitate morală.\n\nO lași pe Ana singură cu Lică, drept 'garanție', în timp ce tu pleci după jandarm.",
+            chapter: "VIII. Trădarea Supremă",
+            status: "Disperat",
+            theme: "blood",
+            choices: [
+                { text: "Plec după Pintea, lăsând-o pe Ana în urmă.", target: "punctul_culminant" }
+            ]
+        },
+        punctul_culminant: {
+            text: "Te întorci cu Pintea, dar e prea târziu. Ana s-a dăruit lui Lică, scârbită de lașitatea ta. \n\nIntri în cameră. Ana te privește cu un dispreț zdrobitor: „Ești o muiere, Ghiță, nu un bărbat!”. Orbit de gelozie, de furie și de propria neputință, scoți cuțitul.",
+            chapter: "IX. Sânge și Patimă",
+            status: "Criminal",
+            theme: "blood",
+            choices: [
+                { text: "O ucid pe Ana pentru a spăla rușinea.", target: "uciderea" }
+            ]
+        },
+        uciderea: {
+            text: "Îi înfigi cuțitul în inimă. Ana cade. Dar Lică este acolo, martor al nebuniei tale. Îi face un semn scurt lui Răuț, omul său de încredere.\n\nUn foc de armă. Glonțul te lovește în ceafă. Cazi peste trupul neînsuflețit al soției tale.",
+            chapter: "X. Sfârșitul",
+            status: "Mort",
+            theme: "blood",
+            choices: [
+                { text: "Vezi epilogul...", target: "final" }
+            ]
+        },
+        final: {
+            text: "Lică fuge, încolțit de Pintea. Pentru a nu fi prins viu, se izbește cu capul de un stejar uscat, murind pe loc.\n\nMoara cu Noroc ia foc. Flăcările mistuie totul: trupurile, banii blestemați, trecutul. A doua zi, bătrâna privește ruinele fumegânde:\n\n„Se vede c-au lăsat ferestrele deschise... Simțeam eu că nu are să iasă bine; dar așa le-a fost data!”",
+            chapter: "Epilog: Purificare",
+            status: "Cenușă",
+            theme: "fire",
+            choices: [
+                { text: "Joacă din nou de la început", target: "start" }
+            ]
+        }
+    };
+
+    // --- Funcția Principală de Redare ---
+    function showScene(sceneKey) {
+        const scene = scenes[sceneKey];
+        
+        // 1. Schimbă tema vizuală (declanșează tranzițiile CSS)
+        htmlElement.setAttribute('data-theme', scene.theme);
+
+        // 2. Efect de fade-out pentru textul vechi
+        storyElement.classList.remove('fade-in-text');
+        void storyElement.offsetWidth; // Forțăm reflow pentru a reseta animația
+
+        // 3. Actualizăm conținutul
+        storyElement.innerText = scene.text;
+        chapterElement.innerText = scene.chapter;
+        statusElement.innerText = scene.status;
+
+        // 4. Aplicăm efectul de fade-in pentru textul nou
+        storyElement.classList.add('fade-in-text');
+
+        // 5. Regenerăm butoanele
+        choicesElement.innerHTML = '';
+        scene.choices.forEach(choice => {
+            const button = document.createElement('button');
+            button.innerText = choice.text;
+            // Adăugăm un mic delay la click pentru a lăsa animația butonului să se vadă
+            button.onclick = () => {
+                setTimeout(() => showScene(choice.target), 150);
+            };
+            choicesElement.appendChild(button);
+        });
+    }
+
+    // Inițializare joc
+    // Folosim un mic timeout la pornire pentru a permite încărcarea fonturilor
+    setTimeout(() => {
+         showScene('start');
+    }, 100);
+   
+
+</script>
+
+</body>
+</html>
